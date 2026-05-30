@@ -73,6 +73,13 @@ jobs:
         working-directory: self-flow-rust-action-service
         run: cargo build --release
 
+      - name: Locate Executable
+        shell: pwsh
+        run: |
+          Get-ChildItem -Path action-service `
+            -Recurse `
+            -Include *.exe
+
       - name: Build Computer Use Service
         working-directory: self-flow-rust-computer-use
         run: cargo build --release
