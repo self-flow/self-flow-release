@@ -14,6 +14,7 @@ permissions:
 jobs:
   build-windows:
     runs-on: windows-latest
+    environment: dev
 
     outputs:
       version: ${{ steps.version.outputs.version }}
@@ -109,6 +110,7 @@ jobs:
 
   build-macos:
     runs-on: macos-latest
+    environment: dev
 
     steps:
       - uses: actions/checkout@v4
@@ -178,6 +180,7 @@ jobs:
       - build-macos
 
     runs-on: ubuntu-latest
+    environment: dev
 
     steps:
       - uses: actions/download-artifact@v4
