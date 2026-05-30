@@ -34,24 +34,28 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: self-flow/self-flow-rust-action-service
+          ref: dev
           path: self-flow-rust-action-service
           token: ${{ secrets.RELEASE_PAT }}
 
       - uses: actions/checkout@v4
         with:
           repository: self-flow/self-flow-rust-computer-use
+          ref: dev
           path: self-flow-rust-computer-use
           token: ${{ secrets.RELEASE_PAT }}
 
       - uses: actions/checkout@v4
         with:
           repository: self-flow/self-flow-scheduler-service
+          ref: dev
           path: self-flow-scheduler-service
           token: ${{ secrets.RELEASE_PAT }}
 
       - uses: actions/checkout@v4
         with:
           repository: self-flow/self-flow-ui
+          ref: dev
           path: self-flow-ui
           token: ${{ secrets.RELEASE_PAT }}
 
@@ -116,24 +120,28 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: self-flow/self-flow-rust-action-service
+          ref: dev
           path: self-flow-rust-action-service
           token: ${{ secrets.RELEASE_PAT }}
 
       - uses: actions/checkout@v4
         with:
           repository: self-flow/self-flow-rust-computer-use
+          ref: dev
           path: self-flow-rust-computer-use
           token: ${{ secrets.RELEASE_PAT }}
 
       - uses: actions/checkout@v4
         with:
           repository: self-flow/self-flow-scheduler-service
+          ref: dev
           path: self-flow-scheduler-service
           token: ${{ secrets.RELEASE_PAT }}
 
       - uses: actions/checkout@v4
         with:
           repository: self-flow/self-flow-ui
+          ref: dev
           path: self-flow-ui
           token: ${{ secrets.RELEASE_PAT }}
 
