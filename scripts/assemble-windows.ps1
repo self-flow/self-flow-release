@@ -15,19 +15,19 @@ New-Item -ItemType Directory -Force `
 Write-Host "Copying Action Service"
 
 Copy-Item `
-  action-service/target/release/*.exe `
+  self-flow-rust-action-service/target/release/*.exe `
   self-flow-ui/action-service/
 
 Write-Host "Copying Computer Use Service"
 
 Copy-Item `
-  computer-use-service/target/release/*.exe `
+  self-flow-rust-computer-use/target/release/*.exe `
   self-flow-ui/computer-use-service/
 
 Write-Host "Copying Scheduler Service"
 
 Copy-Item `
-  scheduler-service/target/release/*.exe `
+  self-flow-scheduler-service/target/release/*.exe `
   self-flow-ui/scheduler-service/
 
 Write-Host "Generating runtime.json"
