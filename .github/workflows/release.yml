@@ -1,0 +1,198 @@
+name: Self Flow Release
+
+on:
+  repository_dispatch:
+    types: [build-release]
+
+concurrency:
+  group: self-flow-release
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+
+    steps:
+      - name: Generate Version
+        id: version
+        shell: pwsh
+        run: |
+          $version = Get-Date -Format "yyyy.MM.dd.HHmm"
+          echo "version=$version" >> $env:GITHUB_OUTPUT
+
+      #####################################################
+      # Checkout repos
+      #####################################################
+
+      - uses: actions/checkout@v4
+        with:
+          repository: self-flow/self-flow-rust-action-service
+          path: self-flow-rust-action-service
+          token: ${{ secrets.RELEASE_PAT }}
+
+      - uses: actions/checkout@v4
+        with:
+          repository: self-flow/self-flow-rust-computer-use
+          path: self-flow-rust-computer-use
+          token: ${{ secrets.RELEASE_PAT }}
+
+      - uses: actions/checkout@v4
+        with:
+          repository: self-flow/self-flow-scheduler-service
+          path: self-flow-scheduler-service
+          token: ${{ secrets.RELEASE_PAT }}
+
+      - uses: actions/checkout@v4
+        with:
+          repository: self-flow/self-flow-ui
+          path: self-flow-ui
+          token: ${{ secrets.RELEASE_PAT }}
+
+      - uses: actions/checkout@v4
+        with:
+          path: self-flow-release
+
+      #####################################################
+      # Rust
+      #####################################################
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Build Action Service
+        working-directory: self-flow-rust-action-service
+        run: cargo build --release
+
+      - name: Build Computer Use Service
+        working-directory: self-flow-rust-computer-use
+        run: cargo build --release
+
+      - name: Build Scheduler Service
+        working-directory: self-flow-scheduler-service
+        run: cargo build --release
+
+      #####################################################
+      # Node
+      #####################################################
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install UI Dependencies
+        working-directory: self-flow-ui
+        run: npm ci
+
+      #####################################################
+      # Package
+      #####################################################
+
+      - name: Assemble Windows Package
+        shell: pwsh
+        run: |
+          ./self-flow-release/scripts/assemble-windows.ps1
+
+      #####################################################
+      # Upload Artifact
+      #####################################################
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-installer
+          path: |
+            self-flow-ui/release/*.exe
+
+  build-macos:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: self-flow/self-flow-rust-action-service
+          path: self-flow-rust-action-service
+          token: ${{ secrets.RELEASE_PAT }}
+
+      - uses: actions/checkout@v4
+        with:
+          repository: self-flow/self-flow-rust-computer-use
+          path: self-flow-rust-computer-use
+          token: ${{ secrets.RELEASE_PAT }}
+
+      - uses: actions/checkout@v4
+        with:
+          repository: self-flow/self-flow-scheduler-service
+          path: self-flow-scheduler-service
+          token: ${{ secrets.RELEASE_PAT }}
+
+      - uses: actions/checkout@v4
+        with:
+          repository: self-flow/self-flow-ui
+          path: self-flow-ui
+          token: ${{ secrets.RELEASE_PAT }}
+
+      - uses: actions/checkout@v4
+        with:
+          path: self-flow-release
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Build Action Service
+        working-directory: self-flow-rust-action-service
+        run: cargo build --release
+
+      - name: Build Computer Use Service
+        working-directory: self-flow-rust-computer-use
+        run: cargo build --release
+
+      - name: Build Scheduler Service
+        working-directory: self-flow-scheduler-service
+        run: cargo build --release
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install UI Dependencies
+        working-directory: self-flow-ui
+        run: npm ci
+
+      - name: Assemble Mac Package
+        run: |
+          chmod +x self-flow-release/scripts/assemble-macos.sh
+          ./self-flow-release/scripts/assemble-macos.sh
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mac-installer
+          path: |
+            self-flow-ui/release/*.dmg
+
+  create-release:
+    needs:
+      - build-windows
+      - build-macos
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: windows-installer
+          path: artifacts/windows
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: mac-installer
+          path: artifacts/mac
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ needs.build-windows.outputs.version }}
+          files: |
+            artifacts/windows/**
+            artifacts/mac/**
