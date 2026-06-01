@@ -54,10 +54,44 @@ Write-Host "Generating runtime.json"
 self-flow-ui/process/runtime.json `
 -Encoding utf8
 
+############################################################
+# DEBUG
+############################################################
+
+Write-Host ""
+Write-Host "===== VERIFYING COPIED FILES ====="
+
+Get-ChildItem self-flow-ui/action-service -Recurse
+
+Get-ChildItem self-flow-ui/computer-use-service -Recurse
+
+Get-ChildItem self-flow-ui/scheduler-service -Recurse
+
+Get-ChildItem self-flow-ui/process -Recurse
+
+############################################################
+# BUILD
+############################################################
+
 Write-Host "Building Electron"
 
 Push-Location self-flow-ui
 
-npx electron-builder --win --x64 --publish never
+npm run build
+
+# Generate unpacked app first
+npx electron-builder --win dir --x64 --publish never
+
+############################################################
+# DEBUG PACKAGING
+############################################################
+
+Write-Host ""
+Write-Host "===== WIN UNPACKED CONTENT ====="
+
+Get-ChildItem `
+  release/win-unpacked/resources `
+  -Recurse `
+  -ErrorAction SilentlyContinue
 
 Pop-Location

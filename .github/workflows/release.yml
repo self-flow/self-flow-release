@@ -112,80 +112,80 @@ jobs:
           path: |
             self-flow-ui/release/*.exe
 
-  build-macos:
-    runs-on: macos-latest
-    environment: dev
+  # build-macos:
+  #   runs-on: macos-latest
+  #   environment: dev
 
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          repository: self-flow/self-flow-rust-action-service
-          ref: dev
-          path: self-flow-rust-action-service
-          token: ${{ secrets.RELEASE_PAT }}
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #       with:
+  #         repository: self-flow/self-flow-rust-action-service
+  #         ref: dev
+  #         path: self-flow-rust-action-service
+  #         token: ${{ secrets.RELEASE_PAT }}
 
-      - uses: actions/checkout@v4
-        with:
-          repository: self-flow/self-flow-rust-computer-use
-          ref: dev
-          path: self-flow-rust-computer-use
-          token: ${{ secrets.RELEASE_PAT }}
+  #     - uses: actions/checkout@v4
+  #       with:
+  #         repository: self-flow/self-flow-rust-computer-use
+  #         ref: dev
+  #         path: self-flow-rust-computer-use
+  #         token: ${{ secrets.RELEASE_PAT }}
 
-      - uses: actions/checkout@v4
-        with:
-          repository: self-flow/self-flow-scheduler-service
-          ref: dev
-          path: self-flow-scheduler-service
-          token: ${{ secrets.RELEASE_PAT }}
+  #     - uses: actions/checkout@v4
+  #       with:
+  #         repository: self-flow/self-flow-scheduler-service
+  #         ref: dev
+  #         path: self-flow-scheduler-service
+  #         token: ${{ secrets.RELEASE_PAT }}
 
-      - uses: actions/checkout@v4
-        with:
-          repository: self-flow/self-flow-ui
-          ref: dev
-          path: self-flow-ui
-          token: ${{ secrets.RELEASE_PAT }}
+  #     - uses: actions/checkout@v4
+  #       with:
+  #         repository: self-flow/self-flow-ui
+  #         ref: dev
+  #         path: self-flow-ui
+  #         token: ${{ secrets.RELEASE_PAT }}
 
-      - uses: actions/checkout@v4
-        with:
-          path: self-flow-release
+  #     - uses: actions/checkout@v4
+  #       with:
+  #         path: self-flow-release
 
-      - uses: dtolnay/rust-toolchain@stable
+  #     - uses: dtolnay/rust-toolchain@stable
 
-      - name: Build Action Service
-        working-directory: self-flow-rust-action-service
-        run: cargo build --release
+  #     - name: Build Action Service
+  #       working-directory: self-flow-rust-action-service
+  #       run: cargo build --release
 
-      - name: Build Computer Use Service
-        working-directory: self-flow-rust-computer-use
-        run: cargo build --release
+  #     - name: Build Computer Use Service
+  #       working-directory: self-flow-rust-computer-use
+  #       run: cargo build --release
 
-      - name: Build Scheduler Service
-        working-directory: self-flow-scheduler-service
-        run: cargo build --release
+  #     - name: Build Scheduler Service
+  #       working-directory: self-flow-scheduler-service
+  #       run: cargo build --release
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
+  #     - uses: actions/setup-node@v4
+  #       with:
+  #         node-version: 20
 
-      - name: Install UI Dependencies
-        working-directory: self-flow-ui
-        run: npm ci
+  #     - name: Install UI Dependencies
+  #       working-directory: self-flow-ui
+  #       run: npm ci
 
-      - name: Assemble Mac Package
-        run: |
-          chmod +x self-flow-release/scripts/assemble-macos.sh
-          ./self-flow-release/scripts/assemble-macos.sh
+  #     - name: Assemble Mac Package
+  #       run: |
+  #         chmod +x self-flow-release/scripts/assemble-macos.sh
+  #         ./self-flow-release/scripts/assemble-macos.sh
 
-      - uses: actions/upload-artifact@v4
-        with:
-          name: mac-installer
-          path: |
-            self-flow-ui/release/*.dmg
+  #     - uses: actions/upload-artifact@v4
+  #       with:
+  #         name: mac-installer
+  #         path: |
+  #           self-flow-ui/release/*.dmg
 
   create-release:
     needs:
       - build-windows
-      - build-macos
+      # - build-macos
 
     runs-on: ubuntu-latest
     environment: dev
@@ -196,14 +196,19 @@ jobs:
           name: windows-installer
           path: artifacts/windows
 
-      - uses: actions/download-artifact@v4
-        with:
-          name: mac-installer
-          path: artifacts/mac
+      # - uses: actions/download-artifact@v4
+      #   with:
+      #     name: mac-installer
+      #     path: artifacts/mac
 
+      # - uses: softprops/action-gh-release@v2
+      #   with:
+      #     tag_name: v${{ needs.build-windows.outputs.version }}
+      #     files: |
+      #       artifacts/windows/**
+      #       artifacts/mac/**
       - uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ needs.build-windows.outputs.version }}
           files: |
             artifacts/windows/**
-            artifacts/mac/**
