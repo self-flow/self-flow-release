@@ -58,6 +58,10 @@ Write-Host "Building Electron"
 
 Push-Location self-flow-ui
 
+Write-Host "Building UI..."
+npm run build
+
+Write-Host "Packaging Electron..."
 npx electron-builder --win --x64 --publish never
 
 Pop-Location
