@@ -11,17 +11,17 @@ mkdir -p self-flow-ui/process
 
 echo "Copying Action Service"
 
-cp self-flow-rust-action-service/target/release/* \
+cp -R self-flow-rust-action-service/target/release/* \
    self-flow-ui/action-service/
 
 echo "Copying Computer Use Service"
 
-cp self-flow-rust-computer-use/target/release/* \
+cp -R self-flow-rust-computer-use/target/release/* \
    self-flow-ui/computer-use-service/
 
 echo "Copying Scheduler Service"
 
-cp self-flow-scheduler-service/target/release/* \
+cp -R self-flow-scheduler-service/target/release/* \
    self-flow-ui/scheduler-service/
 
 echo "Generating runtime.json"
