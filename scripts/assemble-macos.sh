@@ -9,20 +9,29 @@ mkdir -p self-flow-ui/computer-use-service
 mkdir -p self-flow-ui/scheduler-service
 mkdir -p self-flow-ui/process
 
+echo "Checking Rust release folder sizes"
+
+du -sh self-flow-rust-action-service/target/release/* || true
+du -sh self-flow-rust-computer-use/target/release/* || true
+du -sh self-flow-scheduler-service/target/release/* || true
+
 echo "Copying Action Service"
 
-cp -R self-flow-rust-action-service/target/release/* \
-   self-flow-ui/action-service/
+install -m 755 \
+  self-flow-rust-action-service/target/release/action-service \
+  self-flow-ui/action-service/
 
 echo "Copying Computer Use Service"
 
-cp -R self-flow-rust-computer-use/target/release/* \
-   self-flow-ui/computer-use-service/
+install -m 755 \
+  self-flow-rust-computer-use/target/release/computer-use \
+  self-flow-ui/computer-use-service/
 
 echo "Copying Scheduler Service"
 
-cp -R self-flow-scheduler-service/target/release/* \
-   self-flow-ui/scheduler-service/
+install -m 755 \
+  self-flow-scheduler-service/target/release/scheduler-service \
+  self-flow-ui/scheduler-service/
 
 echo "Generating runtime.json"
 
