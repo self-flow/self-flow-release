@@ -12,105 +12,105 @@ permissions:
   contents: write
 
 jobs:
-  # build-windows:
-  #   runs-on: windows-latest
-  #   environment: dev
+  build-windows:
+    runs-on: windows-latest
+    environment: dev
 
-  #   outputs:
-  #     version: ${{ steps.version.outputs.version }}
+    outputs:
+      version: ${{ steps.version.outputs.version }}
 
-  #   steps:
-  #     - name: Generate Version
-  #       id: version
-  #       shell: pwsh
-  #       run: |
-  #         $version = Get-Date -Format "yyyy.MM.dd.HHmm"
-  #         echo "version=$version" >> $env:GITHUB_OUTPUT
+    steps:
+      - name: Generate Version
+        id: version
+        shell: pwsh
+        run: |
+          $version = Get-Date -Format "yyyy.MM.dd.HHmm"
+          echo "version=$version" >> $env:GITHUB_OUTPUT
 
-  #     #####################################################
-  #     # Checkout repos
-  #     #####################################################
+      #####################################################
+      # Checkout repos
+      #####################################################
 
-  #     - uses: actions/checkout@v4
-  #       with:
-  #         repository: self-flow/self-flow-rust-action-service
-  #         ref: dev
-  #         path: self-flow-rust-action-service
-  #         token: ${{ secrets.RELEASE_PAT }}
+      - uses: actions/checkout@v4
+        with:
+          repository: self-flow/self-flow-rust-action-service
+          ref: dev
+          path: self-flow-rust-action-service
+          token: ${{ secrets.RELEASE_PAT }}
 
-  #     - uses: actions/checkout@v4
-  #       with:
-  #         repository: self-flow/self-flow-rust-computer-use
-  #         ref: dev
-  #         path: self-flow-rust-computer-use
-  #         token: ${{ secrets.RELEASE_PAT }}
+      - uses: actions/checkout@v4
+        with:
+          repository: self-flow/self-flow-rust-computer-use
+          ref: dev
+          path: self-flow-rust-computer-use
+          token: ${{ secrets.RELEASE_PAT }}
 
-  #     - uses: actions/checkout@v4
-  #       with:
-  #         repository: self-flow/self-flow-scheduler-service
-  #         ref: dev
-  #         path: self-flow-scheduler-service
-  #         token: ${{ secrets.RELEASE_PAT }}
+      - uses: actions/checkout@v4
+        with:
+          repository: self-flow/self-flow-scheduler-service
+          ref: dev
+          path: self-flow-scheduler-service
+          token: ${{ secrets.RELEASE_PAT }}
 
-  #     - uses: actions/checkout@v4
-  #       with:
-  #         repository: self-flow/self-flow-ui
-  #         ref: dev
-  #         path: self-flow-ui
-  #         token: ${{ secrets.RELEASE_PAT }}
+      - uses: actions/checkout@v4
+        with:
+          repository: self-flow/self-flow-ui
+          ref: dev
+          path: self-flow-ui
+          token: ${{ secrets.RELEASE_PAT }}
 
-  #     - uses: actions/checkout@v4
-  #       with:
-  #         path: self-flow-release
+      - uses: actions/checkout@v4
+        with:
+          path: self-flow-release
 
-  #     #####################################################
-  #     # Rust
-  #     #####################################################
+      #####################################################
+      # Rust
+      #####################################################
 
-  #     - uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@stable
 
-  #     - name: Build Action Service
-  #       working-directory: self-flow-rust-action-service
-  #       run: cargo build --release
+      - name: Build Action Service
+        working-directory: self-flow-rust-action-service
+        run: cargo build --release
 
-  #     - name: Build Computer Use Service
-  #       working-directory: self-flow-rust-computer-use
-  #       run: cargo build --release
+      - name: Build Computer Use Service
+        working-directory: self-flow-rust-computer-use
+        run: cargo build --release
 
-  #     - name: Build Scheduler Service
-  #       working-directory: self-flow-scheduler-service
-  #       run: cargo build --release
+      - name: Build Scheduler Service
+        working-directory: self-flow-scheduler-service
+        run: cargo build --release
 
-  #     #####################################################
-  #     # Node
-  #     #####################################################
+      #####################################################
+      # Node
+      #####################################################
 
-  #     - uses: actions/setup-node@v4
-  #       with:
-  #         node-version: 20
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
-  #     - name: Install UI Dependencies
-  #       working-directory: self-flow-ui
-  #       run: npm ci
+      - name: Install UI Dependencies
+        working-directory: self-flow-ui
+        run: npm ci
 
-  #     #####################################################
-  #     # Package
-  #     #####################################################
+      #####################################################
+      # Package
+      #####################################################
 
-  #     - name: Assemble Windows Package
-  #       shell: pwsh
-  #       run: |
-  #         ./self-flow-release/scripts/assemble-windows.ps1
+      - name: Assemble Windows Package
+        shell: pwsh
+        run: |
+          ./self-flow-release/scripts/assemble-windows.ps1
 
-  #     #####################################################
-  #     # Upload Artifact
-  #     #####################################################
+      #####################################################
+      # Upload Artifact
+      #####################################################
 
-  #     - uses: actions/upload-artifact@v4
-  #       with:
-  #         name: windows-installer
-  #         path: |
-  #           self-flow-ui/release/*.exe
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-installer
+          path: |
+            self-flow-ui/release/*.exe
 
   build-macos:
     runs-on: macos-latest
