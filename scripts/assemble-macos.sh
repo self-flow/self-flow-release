@@ -15,10 +15,16 @@ du -sh self-flow-rust-action-service/target/release/* || true
 du -sh self-flow-rust-computer-use/target/release/* || true
 du -sh self-flow-scheduler-service/target/release/* || true
 
+echo "Listing Rust binaries"
+
+ls -lh self-flow-rust-action-service/target/release
+ls -lh self-flow-rust-computer-use/target/release
+ls -lh self-flow-scheduler-service/target/release
+
 echo "Copying Action Service"
 
 install -m 755 \
-  self-flow-rust-action-service/target/release/action-service \
+  self-flow-rust-action-service/target/release/self-flow-rust-action-service \
   self-flow-ui/action-service/
 
 echo "Copying Computer Use Service"
@@ -30,7 +36,7 @@ install -m 755 \
 echo "Copying Scheduler Service"
 
 install -m 755 \
-  self-flow-scheduler-service/target/release/scheduler-service \
+  self-flow-scheduler-service/target/release/self-flow-rust-scheduler-service \
   self-flow-ui/scheduler-service/
 
 echo "Generating runtime.json"
