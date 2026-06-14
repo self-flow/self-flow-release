@@ -68,6 +68,7 @@ jobs:
       #####################################################
 
       - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
 
       - name: Build Action Service
         working-directory: self-flow-rust-action-service
@@ -111,6 +112,8 @@ jobs:
           name: windows-installer
           path: |
             self-flow-ui/release/*.exe
+            self-flow-ui/release/*.msix
+            self-flow-ui/release/latest*.yml
 
   build-macos:
     runs-on: macos-latest
@@ -150,6 +153,7 @@ jobs:
           path: self-flow-release
 
       - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
 
       - name: Build Action Service
         working-directory: self-flow-rust-action-service
