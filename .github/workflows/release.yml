@@ -112,7 +112,7 @@ jobs:
           name: windows-installer
           path: |
             self-flow-ui/release/*.exe
-            self-flow-ui/release/*.msix
+            self-flow-ui/release/*.appx
             self-flow-ui/release/latest*.yml
 
   build-macos:
