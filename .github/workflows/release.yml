@@ -94,6 +94,16 @@ jobs:
         working-directory: self-flow-ui
         run: npm ci
 
+      - name: Update package version
+        working-directory: self-flow-ui
+        shell: pwsh
+        run: |
+          $pkg = Get-Content package.json | ConvertFrom-Json
+          $pkg.version = "0.1.${{ github.run_number }}"
+          $pkg | ConvertTo-Json -Depth 100 | Set-Content package.json
+
+          Write-Host "Updated version to $($pkg.version)"
+
       #####################################################
       # Package
       #####################################################
@@ -106,12 +116,12 @@ jobs:
       #####################################################
       # Upload Artifact
       #####################################################
-
+        
+        # self-flow-ui/release/*.exe //add to below path if need to store exe files
       - uses: actions/upload-artifact@v4
         with:
           name: windows-installer
           path: |
-            self-flow-ui/release/*.exe
             self-flow-ui/release/*.appx
             self-flow-ui/release/latest*.yml
 
@@ -174,6 +184,18 @@ jobs:
       - name: Install UI Dependencies
         working-directory: self-flow-ui
         run: npm ci
+
+      - name: Update package version
+        working-directory: self-flow-ui
+        shell: bash
+        run: |
+          node -e "
+          const fs=require('fs');
+          const pkg=require('./package.json');
+          pkg.version='0.1.${{ github.run_number }}';
+          fs.writeFileSync('package.json', JSON.stringify(pkg,null,2));
+          console.log('Version:', pkg.version);
+          "
 
       - name: Assemble Mac Package
         run: |
