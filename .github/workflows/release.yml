@@ -105,19 +105,32 @@ jobs:
           Write-Host "Updated version to $($pkg.version)"
 
       #####################################################
+      # Code Signing Certificate
+      #####################################################
+
+      - name: Decode signing certificate
+        shell: pwsh
+        run: |
+          $bytes = [Convert]::FromBase64String("${{ secrets.WIN_CSC_LINK }}")
+          [IO.File]::WriteAllBytes("$env:RUNNER_TEMP\cert.pfx", $bytes)
+
+      #####################################################
       # Package
       #####################################################
 
       - name: Assemble Windows Package
         shell: pwsh
+        env:
+          CSC_LINK: ${{ runner.temp }}\cert.pfx
+          CSC_KEY_PASSWORD: ${{ secrets.WIN_CSC_KEY_PASSWORD }}
         run: |
           ./self-flow-release/scripts/assemble-windows.ps1
 
       #####################################################
       # Upload Artifact
       #####################################################
-        
-        # self-flow-ui/release/*.exe //add to below path if need to store exe files
+
+      # self-flow-ui/release/*.exe //add to below path if need to store exe files
       - uses: actions/upload-artifact@v4
         with:
           name: windows-installer
