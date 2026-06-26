@@ -58,8 +58,14 @@ Write-Host "Building Electron"
 
 Push-Location self-flow-ui
 
+Write-Host "Compiling Electron..."
+npm run electron:compile
+
 Write-Host "Building UI..."
 npm run build
+
+Write-Host "Verifying compiled Electron files..."
+Get-ChildItem electron *.cjs
 
 Write-Host "Packaging Electron..."
 npx electron-builder --win --x64 --publish never
