@@ -44,19 +44,28 @@ echo "Generating runtime.json"
 cat > self-flow-ui/process/runtime.json <<EOF
 [
   {
-    "service_name":"action-service",
-    "host":"127.0.0.1",
-    "port":7001
+    "service_name": "ui",
+    "host": "0.0.0.0",
+    "port": 60052,
+    "userid": "8CLnvCayNPgFambAIsMbplkr7QJ2"
   },
   {
-    "service_name":"computer-use",
-    "host":"127.0.0.1",
-    "port":7002
+    "service_name": "action-service",
+    "host": "127.0.0.1",
+    "port": 60195,
+    "userid": null
   },
   {
-    "service_name":"scheduler-service",
-    "host":"127.0.0.1",
-    "port":7003
+    "service_name": "computer-use",
+    "host": "127.0.0.1",
+    "port": 60197,
+    "userid": null
+  },
+  {
+    "service_name": "scheduler-service",
+    "host": "127.0.0.1",
+    "port": 60204,
+    "userid": null
   }
 ]
 EOF
