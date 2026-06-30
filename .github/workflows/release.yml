@@ -133,8 +133,22 @@ jobs:
       # Package
       #####################################################
 
+      - name: Prepare Code Signing Certificate
+        shell: pwsh
+        run: |
+          $bytes = [Convert]::FromBase64String("${{ secrets.SELF_FLOW_CERTIFICATE }}")
+          [IO.File]::WriteAllBytes("$env:GITHUB_WORKSPACE\SelfFlowTest.pfx", $bytes)
+
+      # - name: Assemble Windows Package
+      #   shell: pwsh
+      #   run: |
+      #     ./self-flow-release/scripts/assemble-windows.ps1
+
       - name: Assemble Windows Package
         shell: pwsh
+        env:
+          CSC_LINK: $env:GITHUB_WORKSPACE\SelfFlowTest.pfx
+          CSC_KEY_PASSWORD: ${{ secrets.SELF_FLOW_CERT_PASSWORD }}
         run: |
           ./self-flow-release/scripts/assemble-windows.ps1
 
