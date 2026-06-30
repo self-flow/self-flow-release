@@ -144,10 +144,17 @@ jobs:
       #   run: |
       #     ./self-flow-release/scripts/assemble-windows.ps1
 
+      - name: Verify PFX
+        shell: pwsh
+        run: |
+          Write-Host "Workspace: $env:GITHUB_WORKSPACE"
+          Test-Path "$env:GITHUB_WORKSPACE\SelfFlowTest.pfx"
+          Get-ChildItem "$env:GITHUB_WORKSPACE"
+
       - name: Assemble Windows Package
         shell: pwsh
         env:
-          CSC_LINK: $env:GITHUB_WORKSPACE\SelfFlowTest.pfx
+          CSC_LINK: ${{ github.workspace }}/SelfFlowTest.pfx
           CSC_KEY_PASSWORD: ${{ secrets.SELF_FLOW_CERT_PASSWORD }}
         run: |
           ./self-flow-release/scripts/assemble-windows.ps1
